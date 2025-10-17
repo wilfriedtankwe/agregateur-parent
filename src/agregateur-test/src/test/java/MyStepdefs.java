@@ -158,13 +158,14 @@ public class MyStepdefs{
     public void je_me_rend_a_la_ligne_onze_du_fichier(String fichier) throws IOException {
 
 
-        lignesFichier = Files.readAllLines(Paths.get(fichier));
+         lignesFichier = Files.readAllLines(Paths.get(fichier), StandardCharsets.ISO_8859_1);
+
         assertThat(lignesFichier.size())
                 .as("Le fichier doit contenir au moins 11 lignes")
                 .isGreaterThanOrEqualTo(11);
     }
 
-    @Then("je dois retrouvé les champs nommés Date;Libell�;D�bit euros;Cr�dit euros;")
+    @Then("je dois retrouvé les champs nommés Date;Libellé;Débit euros;Crédit euros;")
     public void je_dois_retrouv_les_champs_nomm_s_Date_Libell_D_bit_euros_Cr_dit_euros() {
 
         String ligne11 = lignesFichier.get(10); // Ligne 11 = index 10
@@ -173,9 +174,9 @@ public class MyStepdefs{
         assertThat(ligne11)
                 .as("Les champs attendus ne correspondent pas")
                 .contains("Date")
-                .contains("Libell�")
-                .contains("D�bit euro")
-                .contains("dit euro");
+                .contains("Libellé")
+                .contains("Débit euro")
+                .contains("Crédit euro");
     }
 
     @Given("que le nom du fichier {string} commence par T_cpte")
@@ -190,7 +191,7 @@ public class MyStepdefs{
     @When("je me place a la deuxieme ligne et je compte le nombre de colonne du fichier {string}")
     public void je_me_place_a_la_deuxieme_ligne_et_je_compte_le_nombre_de_colonne_du_fichier(String fichier)throws IOException {
 
-        lignesFichier = Files.readAllLines(Paths.get(fichier));
+        lignesFichier = Files.readAllLines(Paths.get(fichier), StandardCharsets.ISO_8859_1);
 
         assertThat(lignesFichier.size())
                 .as("Le fichier doit contenir au moins deux lignes")

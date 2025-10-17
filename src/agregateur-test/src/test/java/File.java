@@ -53,7 +53,7 @@ public class File {
         }
         // Vérifie si le fichier est corrompu
         try {
-            String contenu = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+            String contenu = new String(Files.readAllBytes(path), StandardCharsets.ISO_8859_1);
             // Si tu suspectes un autre encodage : StandardCharsets.ISO_8859_1
             if (contenu.contains("corrompu") || contenu.contains("\u0000")) {
                 throw new IllegalStateException(ERR_FICHIER_ILLISIBLE);

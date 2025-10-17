@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,7 +53,8 @@ public class File {
         }
         // Vérifie si le fichier est corrompu
         try {
-            String contenu = Files.lines(path).collect(Collectors.joining("\n"));
+            String contenu = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+            // Si tu suspectes un autre encodage : StandardCharsets.ISO_8859_1
             if (contenu.contains("corrompu") || contenu.contains("\u0000")) {
                 throw new IllegalStateException(ERR_FICHIER_ILLISIBLE);
             }

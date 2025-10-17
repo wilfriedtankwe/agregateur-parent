@@ -37,11 +37,11 @@ Feature: agregation des données dans la table budget
   Scenario Outline: vérification de la structure d'un fichier
     Given que le nom du fichier "<fichier>" commence par CA
     When je me rend a la ligne onze du fichier "<fichier>"
-    Then je dois retrouvé les champs nommés Date;Libell�;D�bit euros;Cr�dit euros;
+    Then je dois retrouvé les champs nommés Date;Libellé ;Débit euros;Crédit euros;
 
     Examples:
-      | fichier                                                                | Date       | Libell�  | D�bit euros | Cr�dit euros |
-      | src/test/resources/hellocucumber/fichier/CA20250820_115728.csv  | 12/05/2025 | vente    |          24  |          -24  |
+      | fichier                                                         | Date       | Libellé | Débit euros | Crédit euros |
+      | src/test/resources/hellocucumber/fichier/CA20250820_115728.csv  | 12/05/2025 | vente   |          24 |          -24  |
 
 
   Scenario Outline: vérification de la structure d'un fichier

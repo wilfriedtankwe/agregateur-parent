@@ -27,7 +27,7 @@ Feature: agregation des données dans la table budget
 
     Examples:
       | chemin                                                                                               | etat                 | message                                                       |
-      | src/test/resources/hellocucumber/fichier/CA20250820_115728.csv                                         | existant             | fichier ouvert avec succès                                    |
+      | src/test/resources/hellocucumber/fichier/CA20250820_115728.csv                                      | existant             | fichier ouvert avec succès                                    |
       | src/test/resources/fichier/!#@!@LCL.csv                                                              | manquant             | une erreur "fichier introuvable" doit être remontée           |
       | !@!*&?*?invalid.csv                                                                                  | chemin invalide      | une erreur "chemin invalide" doit être remontée               |
       | src/test/resources/hellocucumber/fichier/T_cpte_00737_691594V_du_22-05-2025_au_19-08-2025.csv         | existant sans droits | une erreur "permission de lecture refusée" doit être remontée |

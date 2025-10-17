@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 import static java.nio.file.Files.*;
 
@@ -51,12 +52,12 @@ public class File {
         }
         // Vérifie si le fichier est corrompu
         try {
-            String contenu = Files.readString(path);
+            String contenu = Files.lines(path).collect(Collectors.joining("\n"));
             if (contenu.contains("corrompu") || contenu.contains("\u0000")) {
                 throw new IllegalStateException(ERR_FICHIER_ILLISIBLE);
             }
         } catch (IOException e) {
-            throw new IllegalStateException(ERR_FICHIER_ILLISIBLE);
+            e.printStackTrace();
         }
 
         // Vérifie si le fichier est lisible

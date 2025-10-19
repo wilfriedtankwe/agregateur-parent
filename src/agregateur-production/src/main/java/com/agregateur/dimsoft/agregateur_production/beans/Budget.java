@@ -54,7 +54,7 @@ public class Budget {
     @JoinTable(name = "budget_subcategory", joinColumns = @JoinColumn(name = "budget_id"), inverseJoinColumns = @JoinColumn(name = "subcategory_id"))
     private Set<SubCategory> subCategories = new HashSet<>();
     @Column(name = "montant")
-    private Float montant;
+    private Double montant;
     @Column(name = "tva_paid")
     private Boolean isTvaPaid;
     @Column(name = "notes")
@@ -145,4 +145,7 @@ public class Budget {
                 + ", tva=" + tva + '}';
     }
 
+    public boolean gettransactionCATvaPaid() {
+        return false;
+    }
 }

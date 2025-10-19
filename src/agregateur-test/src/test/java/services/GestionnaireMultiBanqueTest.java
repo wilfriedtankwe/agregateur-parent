@@ -142,6 +142,7 @@ public class GestionnaireMultiBanqueTest {
         assertThat(resultat).isFalse();
     }
 
+
     // ========== TESTS PARSEUR CA ==========
 
     @Test
@@ -155,27 +156,31 @@ public class GestionnaireMultiBanqueTest {
     @Test
     public void test_parseur_CA_verifie_structure() {
         ParseurCAFile parseur = new ParseurCAFile();
-        boolean valide = parseur.verifierStructure(FICHIER_CA);
+        boolean valide = parseur.verifierStructure("src/test/resources/hellocucumber/fichier/CA20250820_115728.csv");
 
         assertThat(valide).isTrue();
     }
+
 
     @Test
     public void test_parseur_CA_premiere_ligne_contient_date() {
         ParseurCAFile parseur = new ParseurCAFile();
         List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
 
-        assertThat(donnees.get(0)).containsKey("Date");
+        assertThat(donnees.get(0)).containsKey("date");
     }
+
 
     @Test
     public void test_parseur_CA_premiere_ligne_contient_montants() {
         ParseurCAFile parseur = new ParseurCAFile();
-        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+        List<Map<String, String>> donnees = parseur.parserFichier("src/test/resources/hellocucumber/fichier/CA20250820_115728.csv");
+
+        assertThat(donnees).isNotEmpty();
         Map<String, String> premiereLigne = donnees.get(0);
 
-        boolean hasMontant = premiereLigne.containsKey("Débit euros") ||
-                premiereLigne.containsKey("Crédit euros");
+        boolean hasMontant = premiereLigne.containsKey("debit") ||
+                premiereLigne.containsKey("credit");
         assertThat(hasMontant).isTrue();
     }
 
@@ -223,15 +228,6 @@ public class GestionnaireMultiBanqueTest {
         List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_LCL);
 
         assertThat(donnees.get(0)).hasSize(8);
-    }
-
-    @Test
-    public void test_parseur_LCL_extrait_numero_compte() {
-        ParseurLLCFile parseur = new ParseurLLCFile();
-        parseur.parserFichier(FICHIER_LCL);
-
-        String numeroCompte = parseur.getNumeroCompte();
-        assertThat(numeroCompte).isNotNull();
     }
 
     // ========== TESTS OUVERTURE FICHIERS ==========

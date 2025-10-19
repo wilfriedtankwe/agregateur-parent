@@ -1,28 +1,58 @@
+import com.agregateur.dimsoft.agregateur_production.beans.Budget;
+import com.agregateur.dimsoft.agregateur_production.controller.ImportFileController;
+import com.agregateur.dimsoft.agregateur_production.repositories.BudgetRepository;
+import com.agregateur.dimsoft.agregateur_production.util.TypeFichier;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.Before;
+import io.cucumber.java.PendingException;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+
+@SpringBootTest
 
 public class MyStepdefs{
+
+    @Autowired
+    private ImportFileController importFileController;
+    public final BudgetRepository budgetRepository;
+
+    private String repertoire;
+    private String messageRetour;
+    private TypeFichier typeFichier;
 
 
     //wil var
     private File file;
     private String lastMessage;
     private Exception lastException;
+
+    public MyStepdefs(ImportFileController importFileController, BudgetRepository budgetRepository) {
+        this.importFileController = importFileController;
+        this.budgetRepository = budgetRepository;
+    }
+    @Before("@tag_de_ton_scenario") // ou @Before pour tous les scénarios
+    public void nettoyerBaseDeDonnees() {
+        budgetRepository.deleteAll();
+        // Nettoie aussi les autres tables si nécessaire
+    }
 
     public String getEtat() {
         return etat;
@@ -73,7 +103,7 @@ public class MyStepdefs{
     );
 
     //Amine var
-    private String chemainRepertoire;
+
     private String bankId;
 
     //WILFRIED
@@ -373,9 +403,11 @@ public class MyStepdefs{
 
 
     //Amin
-    @Given("le repertoire {string} correctement ouvert")
-    public void le_repertoire_correctement_ouvert(String expectedRepertoire) {
-        this.chemainRepertoire = expectedRepertoire;
+    @Given("le repertoire {string} auquel j'ai accès")
+    public void leRepertoireAuquelJAiAccès(String expectedRepertoire) {
+        budgetRepository.deleteAll();
+
+        this.repertoire = expectedRepertoire; // <--- corrigé
     }
 
     @Given("dont la structure a été correctement identifiée et les numéros de {string}  et l'id  {string} de la banque ont été correctement recupérés")
@@ -383,19 +415,108 @@ public class MyStepdefs{
         this.numero = expectedNumAccount;
         this.bankId = expectedIdBank;
     }
+    @Given("une transaction redondante d{string}un processus d'agregation de données")
+    public void uneTransactionRedondanteDUnFichierDuRepertoireAuCoursDUnProcessusDAgregationDeDonnées(String arg0) {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @Given("une transaction redondante au cours d{string}agregation de données")
+    public void uneTransactionRedondanteAuCoursDUnProcessusDAgregationDeDonnées() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @When("je lance l'agregation des données des transactions du fichier {string} dans la table budget")
+    public void jeLanceAgregation(String fileName) throws Exception {
+        if (fileName.toUpperCase().contains("CA")) {
+            typeFichier = TypeFichier.CA;
+        } else {
+            typeFichier = TypeFichier.LCL;
+        }
 
-    @When("je copie les données des transactions du fichier {string} dans la table budget")
-    public void je_copie_les_données_des_transactions_du_fichier_dans_la_table_budget(String expetedFileName) {
-        if (expetedFileName != null) {
+        if (importFileController == null) {
+            throw new IllegalStateException("importFileController n'est pas injecté !");
+        }
 
+        messageRetour = String.valueOf(importFileController.aggregateFile(repertoire + "/" + fileName, typeFichier));
+    }
+    @When("le programme me retourne un message de la forme {string}")
+    public void leProgrammeMeRetourneUnMessageDeLaForme(String arg0) {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @When("je decide de continuer")
+    public void jeDecideDeContinuer() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @Then("la table budget contiendra les données de la nouvelle transaction")
+    public void tableBudgetContientDonnees(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        // Récupère les budgets en base
+        List<Budget> budgets = budgetRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Budget::getId))
+                .limit(rows.size())
+                .collect(Collectors.toList());
+
+
+        // Vérifie que le nombre correspond
+        assertEquals(rows.size(), budgets.size());
+
+        // Compare chaque ligne
+        for (int i = 0; i < rows.size(); i++) {
+            Map<String, String> expectedRow = rows.get(i);
+            Budget actualBudget = budgets.get(i);
+
+            assertEquals(expectedRow.get("libelle"), actualBudget.getLibelle());
+            assertEquals(Float.parseFloat(expectedRow.get("montant")), actualBudget.getMontant());
+            // ... autres assertions
         }
     }
-
-    @Then("la table budget contiendra les données de la nouvelle transaction le programme lui retournera un message de confirmation de copie de la forme {string}")
-    public void la_table_budget_contiendra_les_données_de_la_nouvelle_transaction_le_programme_lui_retournera_un_message_de_confirmation_de_copie_de_la_forme(String string) {
+    @Then("la copie s'arrête")
+    public void laCopieSArrête() {
         // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        throw new PendingException();
     }
+    @Then("le programme continu et la table budget contiendra une fois de plus les données de la nouvelle transaction")
+    public void leProgrammeContinuEtLaTableBudgetContiendraUneFoisDePlusLesDonnéesDeLaNouvelleTransaction() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @Then("le programme continu et la table budget ne contiendra que les données qui n'existaient pas encore en BD:")
+    public void leProgrammeContinuEtLaTableBudgetNeContiendraQueLesDonnéesQuiNExistaientPasEncoreEnBD() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @And("le programme lui retournera un message de confirmation de copie de la forme {string}")
+    public void verificationMessage(String expected) {
+        assertEquals(expected, messageRetour);
+    }
+    @And("je valide l'annulation de la transaction")
+    public void jeValideLAnnulationDeLaTransaction() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @And("la table budget ne contient pas de nouvelle valeur:")
+    public void laTableBudgetNeContientPasDeNouvelleValeur() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("un message de la forme {string}")
+    public void unMessageDeLaForme(String arg0) {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("le programme lui retournera un message de la forme {string}")
+    public void leProgrammeLuiRetourneraUnMessageDeLaForme(String arg0) {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+
 
 
 }

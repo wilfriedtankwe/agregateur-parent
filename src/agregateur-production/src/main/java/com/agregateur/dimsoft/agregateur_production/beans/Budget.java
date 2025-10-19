@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class Budget {
     @Column(name = "numero")
     private String numero;
     @Column(name = "dateOperation")
-    private Date dateOperation;
+    private LocalDate dateOperation;
     @Column(name = "libelle")
     private String libelle;
     @ManyToMany(fetch = FetchType.EAGER)

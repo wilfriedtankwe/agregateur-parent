@@ -1,4 +1,5 @@
 package repository;
 
-public class BudgetRepositoryTest {
+public interface BudgetRepositoryTest {
+
 }

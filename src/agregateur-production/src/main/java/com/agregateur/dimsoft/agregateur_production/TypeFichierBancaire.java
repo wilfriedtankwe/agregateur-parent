@@ -1,5 +1,8 @@
 package com.agregateur.dimsoft.agregateur_production;
 
+import lombok.Getter;
+
+@Getter
 public enum TypeFichierBancaire {
     CA("Crédit Agricole"),
     LCL("LCL"),

@@ -12,7 +12,6 @@ import com.agregateur.dimsoft.agregateur_production.repositories.BudgetRepositor
 import com.agregateur.dimsoft.agregateur_production.services.BudgetAggregationService;
 import com.agregateur.dimsoft.agregateur_production.services.UserInteractionService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

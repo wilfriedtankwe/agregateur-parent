@@ -12,8 +12,10 @@ public class AgregationResultDto {// Nombre total de transactions traitées
     // Nombre de doublons détectés / ignorés
     private int duplicateTransactions;
 
-    // Nombre de transactions rejetées (erreurs ou refus)
-    private int rejectedTransactions;
+    private int transactionsIgnorees;
+
+    // etat  de transactions rejetées (erreurs ou refus)
+    private Boolean rejectedTransactions;
 
     // Détails des identifiants des transactions sauvegardées
     private List<Long> savedIds = new ArrayList<>();
@@ -29,6 +31,8 @@ public class AgregationResultDto {// Nombre total de transactions traitées
 
     // Statut global de succès
     private boolean success;
+
+    private String message;
 
     // Constructeur public par défaut
     public AgregationResultDto() {
@@ -59,11 +63,11 @@ public class AgregationResultDto {// Nombre total de transactions traitées
         this.duplicateTransactions = duplicateTransactions;
     }
 
-    public int getRejectedTransactions() {
+    public Boolean getRejectedTransactions() {
         return rejectedTransactions;
     }
 
-    public void setRejectedTransactions(int rejectedTransactions) {
+    public void setRejectedTransactions(Boolean rejectedTransactions) {
         this.rejectedTransactions = rejectedTransactions;
     }
 
@@ -91,8 +95,28 @@ public class AgregationResultDto {// Nombre total de transactions traitées
         this.rejectedIds = rejectedIds;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+
+    public Boolean isOperationAnnulee() {
+        return rejectedTransactions;
+    }
+
+    public int getTransactionsEnregistrees() {
+        return savedTransactions;
+    }
+
+    public int getTransactionsIgnorees() {
+        return transactionsIgnorees;
+    }
     public List<String> getMessages() {
         return messages;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setMessages(List<String> messages) {
@@ -124,7 +148,7 @@ public class AgregationResultDto {// Nombre total de transactions traitées
 
     public void addRejectedId(Long id) {
         this.rejectedIds.add(id);
-        this.rejectedTransactions++;
+        this.rejectedTransactions = true;
     }
 
     // --- Méthodes statiques de construction attendues par le service ---
@@ -139,7 +163,7 @@ public class AgregationResultDto {// Nombre total de transactions traitées
         result.setTotalTransactions(0);
         result.setSavedTransactions(0);
         result.setDuplicateTransactions(0);
-        result.setRejectedTransactions(0);
+        result.setRejectedTransactions(false);
         return result;
     }
 
@@ -154,7 +178,7 @@ public class AgregationResultDto {// Nombre total de transactions traitées
         result.addMessage(message);
         result.setSavedTransactions(savedCount);
         result.setDuplicateTransactions(0);
-        result.setRejectedTransactions(0);
+        result.setRejectedTransactions(false);
         result.setTotalTransactions(savedCount);
         return result;
     }
@@ -171,7 +195,7 @@ public class AgregationResultDto {// Nombre total de transactions traitées
         result.addMessage(message);
         result.setSavedTransactions(savedCount);
         result.setDuplicateTransactions(skippedCount);
-        result.setRejectedTransactions(0);
+        result.setRejectedTransactions(false);
         result.setTotalTransactions(savedCount + skippedCount);
         return result;
     }

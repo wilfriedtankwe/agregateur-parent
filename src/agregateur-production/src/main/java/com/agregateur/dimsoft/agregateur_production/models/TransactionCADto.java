@@ -17,4 +17,15 @@ public class TransactionCADto {
     private Double transactionCADebit;
 
     private Double transactionCACredit;
+
+    public TransactionCADto() {
+        // constructeur vide obligatoire
+    }
+
+    public TransactionCADto(Date date, String libelle, Double debit, Double credit) {
+        this.transactionCADate = date;
+        this.transactionCALibelle = libelle;
+        this.transactionCADebit = debit;
+        this.transactionCACredit = credit;
+    }
 }

@@ -22,7 +22,7 @@ public class ImportFileServiceImpl implements ImportFileService {
     private JdbcTemplate jdbcTemplate;
 
     // Chemin du répertoire contenant les fichiers (dans resources)
-    private static final String FILES_DIRECTORY = "data/fichiers";
+    static final String FILES_DIRECTORY = "data/fichiers";
 
     public Map<String, AccountResult> extractNumbersFromFiles() {
         Map<String, AccountResult> results = new HashMap<>();

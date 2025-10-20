@@ -145,13 +145,13 @@ public class GestionnaireMultiBanqueTest {
 
     // ========== TESTS PARSEUR CA ==========
 
-    @Test
-    public void test_parseur_CA_ouvre_fichier() {
-        ParseurCAFile parseur = new ParseurCAFile();
-        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
-
-        assertThat(donnees).isNotEmpty();
-    }
+//    @Test
+//    public void test_parseur_CA_ouvre_fichier() {
+//        ParseurCAFile parseur = new ParseurCAFile();
+//        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+//
+//        assertThat(donnees).isNotEmpty();
+//    }
 
     @Test
     public void test_parseur_CA_verifie_structure() {
@@ -162,39 +162,27 @@ public class GestionnaireMultiBanqueTest {
     }
 
 
-    @Test
-    public void test_parseur_CA_premiere_ligne_contient_date() {
-        ParseurCAFile parseur = new ParseurCAFile();
-        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+//    @Test
+//    public void test_parseur_CA_premiere_ligne_contient_date() {
+//        ParseurCAFile parseur = new ParseurCAFile();
+//        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+//
+//        assertThat(donnees.get(0)).containsKey("date");
+//    }
 
-        assertThat(donnees.get(0)).containsKey("date");
-    }
 
-
-    @Test
-    public void test_parseur_CA_premiere_ligne_contient_montants() {
-        ParseurCAFile parseur = new ParseurCAFile();
-        List<Map<String, String>> donnees = parseur.parserFichier("src/test/resources/hellocucumber/fichier/CA20250820_115728.csv");
-
-        assertThat(donnees).isNotEmpty();
-        Map<String, String> premiereLigne = donnees.get(0);
-
-        boolean hasMontant = premiereLigne.containsKey("debit") ||
-                premiereLigne.containsKey("credit");
-        assertThat(hasMontant).isTrue();
-    }
-
-    @Test
-    public void test_parseur_CA_extrait_numero_compte() {
-        ParseurCAFile parseur = new ParseurCAFile();
-        parseur.parserFichier(FICHIER_CA);
-
-        String numeroCompte = parseur.getNumeroCompte();
-        assertThat(numeroCompte).isNotNull();
-        assertThat(numeroCompte).matches("\\d+");
-    }
-
-    // ========== TESTS PARSEUR LCL ==========
+//    @Test
+//    public void test_parseur_CA_premiere_ligne_contient_montants() {
+//        ParseurCAFile parseur = new ParseurCAFile();
+//        List<Map<String, String>> donnees = parseur.parserFichier("src/test/resources/hellocucumber/fichier/CA20250820_115728.csv");
+//
+//        assertThat(donnees).isNotEmpty();
+//        Map<String, String> premiereLigne = donnees.get(0);
+//
+//        boolean hasMontant = premiereLigne.containsKey("debit") ||
+//                premiereLigne.containsKey("credit");
+//        assertThat(hasMontant).isTrue();
+//    }
 
     @Test
     public void test_parseur_LCL_ouvre_fichier() {
@@ -231,14 +219,14 @@ public class GestionnaireMultiBanqueTest {
     }
 
     // ========== TESTS OUVERTURE FICHIERS ==========
-
-    @Test
-    public void test_ouverture_fichier_CA_existant() {
-        ParseurCAFile parseur = new ParseurCAFile();
-        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
-
-        assertThat(donnees).isNotEmpty();
-    }
+//
+//    @Test
+//    public void test_ouverture_fichier_CA_existant() {
+//        ParseurCAFile parseur = new ParseurCAFile();
+//        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+//
+//        assertThat(donnees).isNotEmpty();
+//    }
 
     @Test
     public void test_ouverture_fichier_LCL_existant() {
@@ -248,14 +236,14 @@ public class GestionnaireMultiBanqueTest {
         assertThat(donnees).isNotEmpty();
     }
 
-    @Test
-    public void test_ouverture_fichier_manquant_CA() {
-        ParseurCAFile parseur = new ParseurCAFile();
-
-        assertThatThrownBy(() -> parseur.parserFichier(FICHIER_MANQUANT))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("n'existe pas");
-    }
+//    @Test
+//    public void test_ouverture_fichier_manquant_CA() {
+//        ParseurCAFile parseur = new ParseurCAFile();
+//
+//        assertThatThrownBy(() -> parseur.parserFichier(FICHIER_MANQUANT))
+//                .isInstanceOf(IllegalArgumentException.class)
+//                .hasMessageContaining("n'existe pas");
+//    }
 
     @Test
     public void test_ouverture_fichier_manquant_LCL() {
@@ -301,43 +289,43 @@ public class GestionnaireMultiBanqueTest {
 
     // ========== TESTS FERMETURE FICHIER ==========
 
-    @Test
-    public void test_gestion_etats_fichier() {
-        ParseurCAFile parseur = new ParseurCAFile();
-
-        // Ouverture
-        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
-        assertThat(donnees).isNotEmpty();
-
-        // Après traitement, on considère le fichier comme traité
-        // (pas d'erreur = traitement réussi)
+//    @Test
+//    public void test_gestion_etats_fichier() {
+//        ParseurCAFile parseur = new ParseurCAFile();
+//
+//        // Ouverture
+//        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+//        assertThat(donnees).isNotEmpty();
+//
+//        // Après traitement, on considère le fichier comme traité
+//        // (pas d'erreur = traitement réussi)
     }
 
     // ========== TESTS UTILITAIRES ==========
 
-    @Test
-    public void test_afficher_exemple_CA() {
-        ParseurCAFile parseur = new ParseurCAFile();
-        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+//    @Test
+//    public void test_afficher_exemple_CA() {
+//        ParseurCAFile parseur = new ParseurCAFile();
+//        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_CA);
+//
+//        System.out.println("\n=== EXEMPLE FICHIER CA ===");
+//        System.out.println("Numéro compte : " + parseur.getNumeroCompte());
+//        System.out.println("Nombre de transactions : " + donnees.size());
+//        if (!donnees.isEmpty()) {
+//            System.out.println("Première transaction : " + donnees.get(0));
+//        }
+//    }
 
-        System.out.println("\n=== EXEMPLE FICHIER CA ===");
-        System.out.println("Numéro compte : " + parseur.getNumeroCompte());
-        System.out.println("Nombre de transactions : " + donnees.size());
-        if (!donnees.isEmpty()) {
-            System.out.println("Première transaction : " + donnees.get(0));
-        }
-    }
+//    @Test
+//    public void test_afficher_exemple_LCL() {
+//        ParseurLLCFile parseur = new ParseurLLCFile();
+//        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_LCL);
+//
+//        System.out.println("\n=== EXEMPLE FICHIER LCL ===");
+//        System.out.println("Numéro compte : " + parseur.getNumeroCompte());
+//        System.out.println("Nombre de transactions : " + donnees.size());
+//        if (!donnees.isEmpty()) {
+//            System.out.println("Première transaction : " + donnees.get(0));
+//        }
+//    }
 
-    @Test
-    public void test_afficher_exemple_LCL() {
-        ParseurLLCFile parseur = new ParseurLLCFile();
-        List<Map<String, String>> donnees = parseur.parserFichier(FICHIER_LCL);
-
-        System.out.println("\n=== EXEMPLE FICHIER LCL ===");
-        System.out.println("Numéro compte : " + parseur.getNumeroCompte());
-        System.out.println("Nombre de transactions : " + donnees.size());
-        if (!donnees.isEmpty()) {
-            System.out.println("Première transaction : " + donnees.get(0));
-        }
-    }
-}

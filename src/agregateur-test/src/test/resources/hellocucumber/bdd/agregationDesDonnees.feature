@@ -155,7 +155,8 @@ Feature: agregation des données dans la table budget
     And le programme lui retournera un message de la forme "copie des données redondantes terminée avec succès"
 
   Scenario: agregation des données d'une transaction déjà existante en BD issue d'un fichier conforme sans rédonce
-    Given  une transaction redondante au cours d'un processus d'agregation de données
+    Given
+    Given  une transaction redondante d'un fichier "fichier" du repertoire au cours d'un processus d'agregation de données
     And un message de la forme " transaction déjà existante, veux-tu poursuivre l'agregation sans enregistrer ses données?"
     When je decide de continuer
     Then le programme continu et la table budget ne contiendra que les données qui n'existaient pas encore en BD:

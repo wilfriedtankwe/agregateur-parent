@@ -1,7 +1,6 @@
 package com.agregateur.dimsoft.agregateur_production.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,6 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 public class TransactionLCLDto {
     private Date transactionLCLDate;
 

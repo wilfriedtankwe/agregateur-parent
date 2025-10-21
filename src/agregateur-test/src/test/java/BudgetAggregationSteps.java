@@ -23,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 
+
+@Transactional
 public class BudgetAggregationSteps {
 
 
@@ -43,7 +46,10 @@ public class BudgetAggregationSteps {
     private BudgetFactory budgetFactory;
     private CompteRepository compteRepository;
     private CalculTVARepository calculTVARepository;
+
+    @PersistenceContext
     private EntityManager entityManager;
+
     private TvaEtMontantdeductibleBilanComptaRepository tvaEtMontantdeductibleBilanComptaRepository;
 
 
@@ -111,16 +117,28 @@ public class BudgetAggregationSteps {
         this.repertoire = repertoire;
     }
 
+    // Dans BudgetAggregationSteps.java
+
+    @Transactional
     @Given("dont la structure a été correctement identifiée et les numéros de {string} et l'id {string} de la banque ont été correctement recupérés")
     public void dontLaStructureAEteCorrectementIdentifiee(String compteStr, String bankStr) throws Exception {
-        // Extraire les IDs des paramètres
-        Long compteId = Long.parseLong(compteStr.replaceAll("[<>\"]", ""));
-        Long bankId = Long.parseLong(bankStr.replaceAll("[<>\"]", ""));
 
-        compte.setId(compteId);
-        bank.setId(bankId);
+        // --- 1️⃣ Création d’un compte fictif ---
+        compte = new Compte();
+        compte.setTitle("Compte Principal Test");
+        entityManager.persist(compte);
 
-        // Préparer les transactions de test
+        bank = new Bank();
+        bank.setNumero(999L);
+        entityManager.persist(bank);
+
+        entityManager.flush();
+        System.out.println("✅ Compte ID: " + compte.getId());
+        System.out.println("✅ Bank ID: " + bank.getId());
+
+        // --- 2️⃣ Préparation des transactions simulées ---
+        caTransactions.clear();
+
         caTransactions.add(TransactionCADto.builder()
                 .transactionCADate(dateFormat.parse("12/08/2025"))
                 .transactionCALibelle("CHEQUE EMIS 8186609")
@@ -134,17 +152,30 @@ public class BudgetAggregationSteps {
                 .build());
 
         caTransactions.add(TransactionCADto.builder()
-                .transactionCADate(dateFormat.parse("04/08/2025"))
-                .transactionCALibelle("COTISATION Offre Compte à composer")
-                .transactionCADebit(-4.68)
+                .transactionCADate(dateFormat.parse("03/08/2025"))
+                .transactionCALibelle("VIREMENT SALAIRE")
+                .transactionCACredit(1200.00)
                 .build());
+
+        System.out.println("✅ Nombre de transactions préparées: " + caTransactions.size());
     }
 
     @When("je lance l'agregation des données des transactions du fichier {string} dans la table budget")
     public void jeLanceLAgregationDesDonneesDesTransactions(String fichier) {
         this.nomFichier = fichier;
+
         result = aggregationService.aggregateCATransaction(caTransactions, compte, bank);
+
+        // --- 3️⃣ Vérifications simples ---
+        assertNotNull(result, "Le résultat d’agrégation est nul !");
+        assertTrue(result.isSuccess(), "L’agrégation devrait être marquée comme un succès.");
+
+        System.out.println("✅ Agrégation terminée avec succès !");
+        System.out.println("➡️ Transactions enregistrées : " + result.getSavedTransactions());
+        System.out.println("➡️ Doublons détectés : " + result.getDuplicateTransactions());
+        System.out.println("➡️ Messages : " + result.getMessages());
     }
+
 
     @Then("la table budget contiendra les données de la nouvelle transaction")
     public void laTableBudgetContiendraLesDonneesDeLaNouvelleTransaction(DataTable dataTable) {
